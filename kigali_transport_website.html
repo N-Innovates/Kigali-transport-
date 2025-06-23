@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improving Public Transport Experience in Kigali</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --kigali-green: #228B22;
+            --kigali-yellow: #FFD700;
+            --kigali-blue: #1E90FF;
+            --dark-green: #006400;
+            --light-green: #90EE90;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--kigali-green);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--kigali-green);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--kigali-green);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--kigali-green);
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--kigali-green) 0%, var(--kigali-blue) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="buses" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="none"/><path d="M20,30 L80,30 L80,70 L20,70 Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/></pattern></defs><rect width="1000" height="1000" fill="url(%23buses)"/></svg>') center/cover;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: var(--kigali-yellow);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--kigali-green);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--kigali-yellow);
+            border-radius: 2px;
+        }
+
+        /* Problem Statement */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .problem-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid var(--kigali-green);
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .problem-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--kigali-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Stakeholder Analysis */
+        .stakeholder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stakeholder-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .stakeholder-card.primary {
+            border-top: 4px solid var(--kigali-green);
+        }
+
+        .stakeholder-card.secondary {
+            border-top: 4px solid var(--kigali-blue);
+        }
+
+        .stakeholder-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* PESTLE Analysis */
+        .pestle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pestle-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pestle-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .pestle-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .political { background: var(--kigali-green); }
+        .economic { background: var(--kigali-yellow); color: var(--text-dark) !important; }
+        .social { background: var(--kigali-blue); }
+        .technological { background: #9b59b6; }
+        .legal { background: #e74c3c; }
+        .environmental { background: #27ae60; }
+
+        /* Empathy Map */
+        .empathy-map {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .empathy-quadrant {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .empathy-quadrant:hover {
+            transform: scale(1.02);
+        }
+
+        .empathy-quadrant h3 {
+            color: var(--kigali-green);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .says { border-top: 5px solid #e74c3c; }
+        .thinks { border-top: 5px solid #3498db; }
+        .does { border-top: 5px solid #f39c12; }
+        .feels { border-top: 5px solid #9b59b6; }
+
+        /* Root Cause Analysis */
+        .root-cause-diagram {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .cause-tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .surface-problems {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .problem-bubble {
+            background: var(--kigali-blue);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        .root-causes {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .root-bubble {
+            background: var(--kigali-green);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+        }
+
+        /* Conclusion */
+        .conclusion {
+            background: linear-gradient(135deg, var(--kigali-green), var(--kigali-blue));
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .conclusion h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .conclusion p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--bg-light);
+            padding: 5rem 0;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .author-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .author-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--kigali-green);
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section {
+                padding: 3rem 0;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .empathy-map {
+                grid-template-columns: 1fr;
+            }
+
+            .surface-problems,
+            .root-causes {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .pestle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stakeholder-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 9999;
+        }
+
+        .scroll-progress {
+            height: 100%;
+            background: var(--kigali-yellow);
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress" id="scrollProgress"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">🚌 Kigali Transport</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#problem">Problem</a></li>
+                <li><a href="#stakeholders">Stakeholders</a></li>
+                <li><a href="#pestle">PESTLE</a></li>
+                <li><a href="#empathy">Empathy Map</a></li>
+                <li><a href="#causes">Root Causes</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Transforming Kigali's Commute</h1>
+            <p>Tackling long wait times and overcrowding to improve daily life for commuters.</p>
+            <a href="#problem" class="cta-button">Explore the Research</a>
+        </div>
+    </section>
+
+    <!-- Problem Statement -->
+    <section id="problem" class="section">
+        <h2 class="section-title">The Challenge We Face</h2>
+        <p style="text-align: center; font-size: 1.2rem; margin-bottom: 3rem; color: var(--text-light);">
+            Kigali's rapid population growth has strained our public transportation system, creating significant challenges for daily commuters.
+        </p>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">📈</div>
+                <h3>Growing Population</h3>
+                <p>Kigali's population has grown exponentially, but public transport infrastructure hasn't kept pace with demand.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">⏰</div>
+                <h3>Extended Wait Times</h3>
+                <p>Commuters face 45-60 minute delays daily, significantly impacting productivity and quality of life.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">😰</div>
+                <h3>Stress & Overcrowding</h3>
+                <p>Overcrowded buses and unpredictable schedules create stress and discomfort for passengers.</p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">👥</div>
+                <h3>Most Affected Groups</h3>
+                <p>Students, low-income workers, and small business owners bear the greatest burden of these transportation challenges.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stakeholder Analysis -->
+    <section id="stakeholders" class="section">
+        <h2 class="section-title">Stakeholder Analysis</h2>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 3rem; color: var(--text-light);">
+            Understanding who is impacted and who can drive change in Kigali's transport system.
+        </p>
+        
+        <h3 style="color: var(--kigali-green); margin-bottom: 1rem;">Primary Stakeholders</h3>
+        <div class="stakeholder-grid">
+            <div class="stakeholder-card primary">
+                <h4>Daily Commuters</h4>
+                <p>Students, workers, and residents who rely on public transport daily</p>
+                <strong>Influence: High | Interest: Very High</strong>
+            </div>
+            <div class="stakeholder-card primary">
+                <h4>Transport Operators</h4>
+                <p>Bus companies and drivers directly involved in service delivery</p>
+                <strong>Influence: Very High | Interest: High</strong>
+            </div>
+            <div class="stakeholder-card primary">
+                <h4>City Government</h4>
+                <p>Kigali City Council and transport authorities setting policies</p>
+                <strong>Influence: Very High | Interest: High</strong>
+            </div>
+        </div>
+
+        <h3 style="color: var(--kigali-blue); margin: 3rem 0 1rem;">Secondary Stakeholders</h3>
+        <div class="stakeholder-grid">
+            <div class="stakeholder-card secondary">
+                <h4>Local Businesses</h4>
+                <p>Companies affected by employee commute challenges</p>
+                <strong>Influence: Medium | Interest: Medium</strong>
+            </div>
+            <div class="stakeholder-card secondary">
+                <h4>Technology Companies</h4>
+                <p>Firms that could provide digital solutions</p>
+                <strong>Influence: Medium | Interest: High</strong>
+            </div>
+            <div class="stakeholder-card secondary">
+                <h4>Environmental Groups</h4>
+                <p>Organizations focused on sustainable transport</p>
+                <strong>Influence: Low | Interest: High</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- PESTLE Analysis -->
+    <section id="pestle" class="section" style="background: var(--bg-light);">
+        <h2 class="section-title">PESTLE Analysis</h2>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 3rem; color: var(--text-light);">
+            Examining the external factors that influence Kigali's public transportation challenges.
+        </p>
+        <div class="pestle-grid">
+            <div class="pestle-item">
+                <div class="pestle-icon political">🏛️</div>
+                <h3>Political</h3>
+                <p>Government policies, urban planning decisions, and public investment priorities directly shape transport infrastructure development.</p>
+            </div>
+            <div class="pestle-item">
+                <div class="pestle-icon economic">💰</div>
+                <h3>Economic</h3>
+                <p>Limited public funds, fare affordability concerns, and economic growth creating increased transport demand.</p>
+            </div>
+            <div class="pestle-item">
+                <div class="pestle-icon social">👥</div>
+                <h3>Social</h3>
+                <p>Rapid urbanization, changing commuter expectations, and social inequality affecting transport access.</p>
+            </div>
+            <div class="pestle-item">
+                <div class="pestle-icon technological">💻</div>
+                <h3>Technological</h3>
+                <p>Opportunities for GPS tracking, mobile apps, and smart traffic management systems to improve efficiency.</p>
+            </div>
+            <div class="pestle-item">
+                <div class="pestle-icon legal">⚖️</div>
+                <h3>Legal</h3>
+                <p>Transport regulations, safety standards, and licensing requirements affecting service quality and innovation.</p>
+            </div>
+            <div class="pestle-item">
+                <div class="pestle-icon environmental">🌱</div>
+                <h3>Environmental</h3>
+                <p>Air quality concerns, climate change goals, and the need for sustainable transport solutions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Empathy Map -->
+    <section id="empathy" class="section">
+        <h2 class="section-title">Commuter Empathy Map</h2>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 3rem; color: var(--text-light);">
+            Understanding the daily experience of an average Kigali commuter.
+        </p>
+        <div class="empathy-map">
+            <div class="empathy-quadrant says">
+                <h3>Says</h3>
+                <ul style="text-align: left; list-style: none;">
+                    <li>• "I never know when the bus will come"</li>
+                    <li>• "I'm always late for work"</li>
+                    <li>• "The buses are too crowded"</li>
+                    <li>• "I wish there was a schedule"</li>
+                </ul>
+            </div>
+            <div class="empathy-quadrant thinks">
+                <h3>Thinks</h3>
+                <ul style="text-align: left; list-style: none;">
+                    <li>• "Maybe I should leave earlier"</li>
+                    <li>• "This system needs to improve"</li>
+                    <li>• "I could be more productive with this time"</li>
+                    <li>• "Other cities must have better systems"</li>
+                </ul>
+            </div>
+            <div class="empathy-quadrant does">
+                <h3>Does</h3>
+                <ul style="text-align: left; list-style: none;">
+                    <li>• Waits at bus stops for long periods</li>
+                    <li>• Checks time frequently</li>
+                    <li>• Squeezes into overcrowded buses</li>
+                    <li>• Arrives late to destinations</li>
+                </ul>
+            </div>
+            <div class="empathy-quadrant feels">
+                <h3>Feels</h3>
+                <ul style="text-align: left; list-style: none;">
+                    <li>• Frustrated and stressed</li>
+                    <li>• Anxious about being late</li>
+                    <li>• Physically uncomfortable</li>
+                    <li>• Powerless to change the situation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Root Cause Analysis -->
+    <section id="causes" class="section" style="background: var(--bg-light);">
+        <h2 class="section-title">Root Cause Analysis</h2>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 3rem; color: var(--text-light);">
+            Looking beyond surface problems to identify fundamental causes.
+        </p>
+        <div class="root-cause-diagram">
+            <div class="cause-tree">
+                <h3 style="color: var(--kigali-blue); margin-bottom: 2rem;">Surface Problems</h3>
+                <div class="surface-problems">
+                    <div class="problem-bubble">Long Wait Times</div>
+                    <div class="problem-bubble">Overcrowding</div>
+                    <div class="problem-bubble">Unpredictable Schedules</div>
+                    <div class="problem-bubble">Route Inefficiency</div>
+                </div>
+                
+                <div style="font-size: 2rem; color: var(--text-light); margin: 1rem 0;">⬇️</div>
+                
+                <h3 style="color: var(--kigali-green); margin-bottom: 2rem;">Root Causes</h3>
+                <div class="root-causes">
+                    <div class="root-bubble">No Real-time Tracking</div>
+                    <div class="root-bubble">Poor Route Optimization</div>
+                    <div class="root-bubble">Insufficient Fleet Size</div>
+                    <div class="root-bubble">Lack of Data Integration</div>
+                    <div class="root-bubble">Limited Technology Adoption</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conclusion -->
+    <section class="conclusion">
+        <h2>Why This Matters by 2026</h2>
+        <p>
+            Solving Kigali's public transportation challenges isn't just about convenience—it's about economic productivity, 
+            social equity, and quality of life for hundreds of thousands of residents. By implementing data-driven, 
+            tech-enabled, and people-centered solutions, we can transform how our city moves. The time for action is now, 
+            and the solutions are within our reach.
+        </p>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-content">
+            <h2 class="section-title">About the Research</h2>
+            <div class="author-card">
+                <div class="author-avatar">BN</div>
+                <h3 style="color: var(--kigali-green); margin-bottom: 1rem;">Benedicte Niyose</h3>
+                <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 2rem;">
+                    Researcher and Student at ALX Rwanda, passionate about using technology and data-driven insights 
+                    to solve urban challenges and improve daily life for Kigali residents.
+                </p>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <a href="mailto:benedicte@example.com" style="background: var(--kigali-green); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; transition: all 0.3s ease;">
+                        📧 Contact
+                    </a>
+                    <a href="#" style="background: var(--kigali-blue); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; transition: all 0.3s ease;">
+                        💼 LinkedIn
+                    </a>
+                    <a href="#" style="background: var(--kigali-yellow); color: var(--text-dark); padding: 10px 20px; border-radius: 25px; text-decoration: none; transition: all 0.3s ease;">
+                        🐦 Twitter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Scroll progress indicator
+        window.addEventListener('scroll', () => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Animate elements on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.problem-card, .stakeholder-card, .pestle-item, .empathy-quadrant');
+            
+            animateElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Mobile menu toggle (basic functionality)
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenu.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Navbar background change on scroll
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.15)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            }
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        });
+
+        // Counter animation for statistics (if you want to add numbers later)
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Add hover effects for interactive elements
+        document.querySelectorAll('.cta-button, .problem-card, .stakeholder-card, .pestle-item').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = this.style.transform.includes('scale') ? this.style.transform : this.style.transform + ' scale(1.02)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = this.style.transform.replace(' scale(1.02)', '');
+            });
+        });
+
+        // Add typing effect for hero title (optional enhancement)
+        function typeWriter(element, text, speed = 100) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing effect when page loads
+        window.addEventListener('load', () => {
+            const heroTitle = document.querySelector('.hero h1');
+            const originalText = heroTitle.textContent;
+            setTimeout(() => {
+                typeWriter(heroTitle, originalText, 80);
+            }, 500);
+        });
+
+        // Add click effects for better user feedback
+        document.querySelectorAll('button, .cta-button, a').forEach(element => {
+            element.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add CSS for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: ripple-animation 0.6s linear;
+                pointer-events: none;
+            }
+            
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            button, .cta-button, a {
+                position: relative;
+                overflow: hidden;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
